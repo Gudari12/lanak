@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liburu Katalogoa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .filtro {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .filtro select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .liburu-kopurua {
+            margin: 10px 0;
+            color: #666;
+        }
+        
+        .liburu-lista {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .liburu-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        
+        .liburu-izenburua {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .liburu-egilea {
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .liburu-info {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+        
+        .genero {
+            background: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liburu Katalogoa</h1>
+        
+        <div class="filtro">
+    <label for="generoSelect">Filtratu generoaren arabera:</label>
+    <select id="generoSelect" onchange="filtrarLiburuak()">
+        <option value="guztiak">Genero guztiak</option>
+        <option value="Zientzia-fikzioa">Zientzia-fikzioa</option>
+        <option value="Klasikoa">Klasikoa</option>
+        <option value="Fikzioa">Fikzioa</option>
+        <option value="Drama">Drama</option>
+        <option value="Distopia">Distopia</option>
+        <option value="Historia">Historia</option>
+        <option value="Eleberri Historikoa">Eleberri Historikoa</option>
+        <option value="Fantasia">Fantasia</option>
+        <option value="Abentura">Abentura</option>
+        <option value="Eleberri Erromantikoa">Eleberri Erromantikoa</option>
+        <option value="Umorea">Umorea</option>
+        <option value="Eleberria">Eleberria</option>
+        <option value="Saiakera">Saiakera</option>
+        <option value="Errealismo Magikoa">Errealismo Magikoa</option>
+        <option value="Alegoria Politikoa">Alegoria Politikoa</option>
+        <option value="Satira">Satira</option>
+        <option value="Gotikoa">Gotikoa</option>
+        <option value="Filosofia">Filosofia</option>
+        <option value="Epika">Epika</option>
+        <option value="Mitologia">Mitologia</option>
+        <option value="Ipuin bilduma">Ipuin bilduma</option>
+        <option value="Gazte Literatura">Gazte Literatura</option>
+        <option value="Fantasia Epikoa">Fantasia Epikoa</option>
+        <option value="Tragedia">Tragedia</option>
+        <option value="Eleberri Klasikoa">Eleberri Klasikoa</option>
+        <option value="Psikologia">Psikologia</option>
+        <option value="Misterioa">Misterioa</option>
+        <option value="Alegoria">Alegoria</option>
+        <option value="Poesia">Poesia</option>
+    </select>
+</div>
+        
+        <div class="liburu-kopurua" id="kopurua">
+            Liburuak kargatzen...
+        </div>
+        
+        <div id="loading" class="loading">Datuak kargatzen...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="liburu-lista" id="liburuLista">
+            <!-- Liburuak hemen agertuko dira -->
+        </div>
+    </div>
+
+    <script>
+        let liburuGuztiak = [];
+        
+        // Datuak kargatu orria irekitzean
+        document.addEventListener('DOMContentLoaded', function() {
+            kargatuDatuak();
+        });
+        
+        async function kargatuDatuak() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            
+            try {
+                const response = await fetch('/liburuak');
+                
+                if (!response.ok) {
+                    throw new Error('Errorea datuak eskuratzean');
+                }
+                
+                liburuGuztiak = await response.json();
+                erakutsiLiburuak(liburuGuztiak);
+                
+            } catch (error) {
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Errorea: ' + error.message;
+            }
+        }
+        
+        function filtrarLiburuak() {
+            const generoSelect = document.getElementById('generoSelect');
+            const aukeratutakoGeneroa = generoSelect.value;
+            
+            let liburuFiltratuak;
+            
+            if (aukeratutakoGeneroa === 'guztiak') {
+                liburuFiltratuak = liburuGuztiak;
+            } else {
+                liburuFiltratuak = liburuGuztiak.filter(liburua => 
+                    liburua.generoak[0] === aukeratutakoGeneroa || liburua.generoak[1] === aukeratutakoGeneroa || liburua.generoak[2] === aukeratutakoGeneroa
+                );
+            }
+            
+            erakutsiLiburuak(liburuFiltratuak);
+        }
+        
+        function erakutsiLiburuak(liburuak) {
+            const lista = document.getElementById('liburuLista');
+            const kopuruaElement = document.getElementById('kopurua');
+            
+            // Liburu kopurua erakutsi
+            kopuruaElement.textContent = liburuak.length + ' liburu aurkitu dira';
+            
+            // Liburuak erakutsi
+            if (liburuak.length === 0) {
+                lista.innerHTML = '<p>Ez da libururik aurkitu.</p>';
+            } else {
+                let html = '';
+                
+                liburuak.forEach(liburua => {
+                    html += `
+                        <div class="liburu-item">
+                            <div class="liburu-izenburua">${liburua.titulua || 'Izenbururik gabe'}</div>
+                            <div class="liburu-egilea">Egilea: ${liburua.egilea || 'Ezezaguna'}</div>
+                            <div class="liburu-info">
+                                ${liburua.argitaletxea.izena ? `<span>Izena: ${liburua.argitaletxea.izena}</span>` : ''}
+                                ${liburua.argitaletxea.hiria ? `<span>Hiria: ${liburua.argitaletxea.hiria}</span>` : ''}
+                                ${liburua.argitalpen_urtea ? `<span>Urtea: ${liburua.argitalpen_urtea}</span>` : ''}
+                                ${liburua.isbn ? `<span>ISBN: ${liburua.isbn}</span>` : ''}
+                                ${liburua.generoak[0] ? `<span class="genero">Generoak: ${liburua.generoak[0]}` : ''}
+                                ${liburua.generoak[1] ? `, ${liburua.generoak[1]}` : '</span>'}
+                                ${liburua.generoak[2] ? `, ${liburua.generoak[2]}</span>` : '</span>'}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                lista.innerHTML = html;
+            }
+            
+            document.getElementById('loading').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
