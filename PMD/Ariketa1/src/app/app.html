@@ -1,0 +1,40 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="navbar-brand">
+        <h1>Ikastetxea</h1>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            Home
+          </a>
+        </li>
+        <li>
+          <a routerLink="/zerbitzuak" routerLinkActive="active">
+            Zerbitzuak
+          </a>
+        </li>
+        <li>
+          <a routerLink="/ikasleak" routerLinkActive="active">
+            Ikasleak
+          </a>
+        </li>
+        <li>
+          <a routerLink="/kontaktua" routerLinkActive="active">
+            Kontaktua
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Eneko Hernaiz (FP Santurtzi LH).</p>
+  </footer>
+</div>
+

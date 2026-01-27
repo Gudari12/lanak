@@ -1,0 +1,84 @@
+<div class="ikasleak-container">
+  <h1>Ikasleak</h1>
+  
+  <div class="table-responsive">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Izena</th>
+          <th>Abizena</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (alumno of alumnos(); track alumno.id) {
+          <tr>
+            <td>{{ alumno.id }}</td>
+            <td>{{ alumno.izena }}</td>
+            <td>{{ alumno.abizena }}</td>
+            <td>
+              <button
+                class="details-btn"
+                (click)="abrirDetalles(alumno)"
+                [attr.aria-label]="'Ver detalles de ' + alumno.izena"
+              >
+                Info gehiago
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (mostrarModal()) {
+    <div
+      class="modal-overlay"
+      (click)="handleModalClick($event)"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'modal-title-' + alumnoSeleccionado()?.id"
+    >
+      @if (alumnoSeleccionado()) {
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 [id]="'modal-title-' + alumnoSeleccionado()?.id">
+              {{ alumnoSeleccionado()?.izena }} {{ alumnoSeleccionado()?.abizena }}
+            </h2>
+            <button
+              class="close-btn"
+              (click)="cerrarModal()"
+              aria-label="Cerrar modal"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="info-row">
+              <span class="label">ID:</span>
+              <span class="value">{{ alumnoSeleccionado()?.id }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Izena (Nombre):</span>
+              <span class="value">{{ alumnoSeleccionado()?.izena }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Abizena (Apellido):</span>
+              <span class="value">{{ alumnoSeleccionado()?.abizena }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Zenbakia (Teléfono):</span>
+              <span class="value">{{ alumnoSeleccionado()?.zenbakia }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Jatorrizko Herria (Ciudad de origen):</span>
+              <span class="value">{{ alumnoSeleccionado()?.jatorrizkoHerria }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+

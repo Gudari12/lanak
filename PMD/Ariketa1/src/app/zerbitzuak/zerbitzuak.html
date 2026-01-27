@@ -1,0 +1,16 @@
+<div class="zerbitzuak-container"> 
+    <h1>Zerbitzuak</h1>
+    <p class="description">
+    Gure ikastetxeak eskaintzen dituen zerbitzu nagusiak honako hauek dira:
+    </p>
+
+  <div class="services-grid">
+    @for (zerbitzua of zerbitzuak(); track zerbitzua.id) {
+      <div class="service-card">
+        <h2>{{ zerbitzua.izena }}</h2>
+        <p>{{ zerbitzua.deskribapena }}</p>
+      </div>
+    }
+  </div>
+</div>
+

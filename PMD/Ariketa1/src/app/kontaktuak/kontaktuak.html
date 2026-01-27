@@ -1,0 +1,73 @@
+<div class="kontaktua-container">
+  <div class="contact-section">
+    <h1>Kontaktua</h1>
+
+  <div class="form-section">
+    <h2>Bidali zure zalantza</h2>
+    
+    @if (mostrarMensaje()) {
+      <div class="success-message">
+        ✓ {{ mensajeEnviado() }}
+      </div>
+    }
+    
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="contact-form">
+      <div class="form-group">
+        <label for="izena">Izena</label>
+        <input
+          id="izena"
+          type="text"
+          formControlName="izena"
+          placeholder="Sartu zure izena"
+          [class.invalid]="form.get('izena')?.invalid && form.get('izena')?.touched"
+        />
+        @if (form.get('izena')?.invalid && form.get('izena')?.touched) {
+          <span class="error-message">
+            Izena 3 karaktere gutxienez behar du
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="zenbakia">Telefono zenbakia</label>
+        <input
+          id="zenbakia"
+          type="tel"
+          formControlName="zenbakia"
+          placeholder="Sartu zure telefonoa"
+          [class.invalid]="form.get('zenbakia')?.invalid && form.get('zenbakia')?.touched"
+        />
+        @if (form.get('zenbakia')?.invalid && form.get('zenbakia')?.touched) {
+          <span class="error-message">
+            Telefonoa 9 zenbaki gutxienez behar ditu
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="zalantza">Deskribapena/Zalantza</label>
+        <textarea
+          id="zalantza"
+          formControlName="zalantza"
+          placeholder="Idatzi zure zalantza..."
+          rows="6"
+          [class.invalid]="form.get('zalantza')?.invalid && form.get('zalantza')?.touched"
+        ></textarea>
+        @if (form.get('zalantza')?.invalid && form.get('zalantza')?.touched) {
+          <span class="error-message">
+            Zalantza 10 karaktere gutxienez behar ditu
+          </span>
+        }
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="submit-button"
+      >
+        Bidali
+      </button>
+    </form>
+  </div>
+</div>
+
